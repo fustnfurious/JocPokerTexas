@@ -12,7 +12,16 @@ public class Taula {
 			pub.add(new Carta(num, pal));
 			
 		}
-	
+		
+		/*
+		int pal =2;
+		pub.add(new Carta(6, pal));
+		pub.add(new Carta(9, pal));
+		pub.add(new Carta(3, pal));
+		pub.add(new Carta(9, pal));
+		pub.add(new Carta(9, pal));
+		pub.add(new Carta(13, pal));
+		pub.add(new Carta(12, pal));*/
 		Taula taula = new Taula();
 		for(int i=0; i<7; i++) {
 			System.out.println(pub.get(i).toString());
@@ -105,7 +114,76 @@ public class Taula {
 		
 		Collections.sort(tot);
 		
-		for(int i=0; i<tot.size(); i++) {
+		for(int i=0; i<tot.size()-1; i++) {
+			for(int j=i+1;j<tot.size();j++) {
+				if(tot.get(i).getNum()==tot.get(j).getNum()) {
+					iguals++;
+				} else {
+					break;
+				}
+			}
+			switch(iguals) {
+			case 1: {
+				if(trio) {
+					full=true;
+				} else if (parella) {
+					dobleParella=true;
+					if(numCartaAlta<tot.get(i).getNum()) {
+						numCartaAlta=tot.get(i).getNum();
+					}
+				} else {
+					parella=true;
+					numCartaAlta=tot.get(i).getNum();
+				}
+			}
+			break;
+			case 2: {
+				if(trio) {
+					if(numCartaAlta<tot.get(i).getNum()) {
+						numCartaAlta=tot.get(i).getNum();
+					}
+				} else {
+					trio=true;
+					numCartaAlta=tot.get(i).getNum();
+				}
+				if(parella) {
+					full=true;
+				}
+				
+			}
+			break;
+			case 3: {
+				return new Rank(POKER, tot.get(i).getNum());
+			}
+			}
+			i+=iguals;
+			iguals=0;
+			
+		}
+		
+		if(full) {
+			return new Rank(FULL, numCartaAlta);
+		}
+		if(trio) {
+			return new Rank(TRIO, numCartaAlta);
+		}
+		if(dobleParella) {
+			return new Rank(DOBLE_PARELLA, numCartaAlta);
+		}
+		if(parella) {
+			return new Rank(PARELLA, numCartaAlta);
+		} else {
+			return new Rank(CARTA_ALTA, tot.get(6).getNum());
+		}
+		
+	}
+	
+	
+	
+	
+	/*
+	 * 
+	 * for(int i=0; i<tot.size(); i++) {
 			for(int j=i+1; j<tot.size()-1; j++) {
 				if(tot.get(i).getNum()==tot.get(j).getNum()) {
 					iguals++;
@@ -147,35 +225,16 @@ public class Taula {
 						return new Rank(POKER, tot.get(i).getNum());
 					}
 					}
-					if(tot.get(i).getNum()>numCartaAlta) {
-						numCartaAlta=tot.get(i).getNum();
-					}
+					
 				} else {
+					i=iguals;
 					iguals=0;
 					break;
 				}
 			}
 			
 		}
-		if(full) {
-			return new Rank(FULL, numCartaAlta);
-		}
-		if(trio) {
-			return new Rank(TRIO, numCartaAlta);
-		}
-		if(dobleParella) {
-			return new Rank(DOBLE_PARELLA, numCartaAlta);
-		}
-		if(parella) {
-			return new Rank(PARELLA, numCartaAlta);
-		} else {
-			return new Rank(CARTA_ALTA, tot.get(6).getNum());
-		}
-		
-	}
-	
-	
-	
+	 */
 	
 	
 	
