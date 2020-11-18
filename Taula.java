@@ -55,13 +55,6 @@ public class Taula {
 		return guanyador;
 	}
 	
-	
-	public class Ma {
-		protected Carta c1;
-		protected Carta c2;
-	}
-	
-	
 	public class Rank implements Comparable<Rank>{
 		protected int rank;
 		protected int numCartaAlta;
@@ -202,24 +195,18 @@ public class Taula {
 
 	
 	public Rank color(ArrayList<Carta> tot) {
-		int pal;
+		ArrayList<Carta> aux = tot;
 		for(int i=0; i<4; i++) {
-			pal=0;
-			ArrayList<Carta> aux=tot;
-			for(int j=0; j<tot.size(); j++) {
-				if(tot.get(j).getPal()==i) {
-					pal++;
+			for(int j=0; j<aux.size(); j++) { //esborrem el que no sigui del pal
+				if(tot.get(j).getPal()!=i) {
+					aux.remove(j);
+					j--;
 				}
 			}
-			if(pal>=5) {
-				for(int k=0; k<tot.size(); k++) {
-					if(aux.get(k).getPal()!=i) {
-						aux.remove(k);
-					}
-				}
-				Collections.sort(aux);
+			if(aux.size()>4) {
 				return new Rank(COLOR, aux.get(aux.size()-1).getNum());
 			}
+			aux=tot;
 		}
 		return new Rank(0,0);
 	}
@@ -257,29 +244,36 @@ public class Taula {
 			}
 		}
 		
-		if(!escala) {
-			return new Rank(CARTA_ALTA, cartaAlta);
-		} else {
-			//escala color?
-			for(int i=0; i<tot.size(); i++) {
-				return new Rank(ESCALA, cartaAlta);
+		if(escala) {
+			ArrayList<Carta> aux = tot;
+			for(int i=0; i<4; i++) { // mirem els quatre pals per separat
+				for(int j=0; j<aux.size(); j++) { //esborrem el que no sigui del pal
+					if(aux.get(j).getPal()!=i) {
+						aux.remove(j);
+						j--;
+					}
+				}
+				if(aux.size()<5) { // si no queden com a minim 5 no cal seguir
+					break;
+				}
+				for(int k=aux.size()-1; k>aux.size()-4;k--) { //busquem escala en el que queda com abans
+					if(aux.get(k).getNum()-4 == aux.get(k-4).getNum()) {
+						if(cartaAlta!=14) {
+							return new Rank (ESCALA_COLOR, cartaAlta);
+						} else return new Rank (ESCALA_REIAL, 14);
+					}
+				}
+				aux=tot;
 			}
-			
-			if(cinc.get(4).getNum()==14) {
-				return new Rank (ESCALA_REIAL, 14);
-			} else return new Rank (ESCALA_COLOR, cinc.get(4).getNum());
 		}
 		
 		
 		
-		/*
-		 * 
-		 * System.out.println("\n\n");
-		 for(int i=0; i<tot.size(); i++) {
-			System.out.println(tot.get(i).toString());
-		}*/
-		
-		//return new Rank(0, 0);
+		if(!escala) {
+			return new Rank(CARTA_ALTA, cartaAlta);
+		} else {
+			return new Rank(ESCALA, cartaAlta);
+		}
 	}
 	
 	
