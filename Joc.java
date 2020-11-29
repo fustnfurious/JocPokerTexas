@@ -5,13 +5,13 @@ public class Joc {
 	private ArrayList<Jugador> jugadors_actius = new ArrayList<>();
 	private Taula tauler = new Taula();
 	private Baralla baralla;
-	private boolean nou_primer_torn = true;
 	Scanner scanner = new Scanner(System.in);
-	private int index_total_torn;
+	private int index_torn_relatiu;
 	
 	
-	public Joc(){
+	public Joc(ArrayList<Jugador> jugadors_inicials){
 		this.baralla = new Baralla();
+		this.jugadors_actius = new ArrayList<Jugador>(jugadors_inicials);
 	}
 	
 	
@@ -20,13 +20,12 @@ public class Joc {
 		while(output == "none") {
 			System.out.println("\nTorn de: "+jugador.getNom()+". Selecciona amb el numero.\n(1)Passar\n(2)Apostar\n(3)Retirarse");
 			output = scanner.nextLine();
-			System.out.println(output);
 			switch(output) {
 			case "1":
 				System.out.println("Passant torn...");
 				break;
 				
-			case "2":  ///FALTA TRACTAR L'EXEMPCI” DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
+			case "2":  ///FALTA TRACTAR L'EXEMPCI√ì DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
 				int output_sencer = 0;
 				boolean apostat_correctament = false;
 				while(apostat_correctament == false) {
@@ -60,7 +59,7 @@ public class Joc {
 				return 2;
 				
 			default:
-				System.out.println("No has triat cap opciÛ correcta");
+				System.out.println("No has triat cap opci√≥ correcta");
 				output = "none";
 			}
 		}
@@ -93,7 +92,7 @@ public class Joc {
 					
 					break;
 					
-				case "2":  ///FALTA TRACTAR L'EXEMPCI” DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
+				case "2":  ///FALTA TRACTAR L'EXEMPCI√ì DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
 					int output_sencer = 0;
 					boolean apostat_correctament = false;
 					while(apostat_correctament == false) {
@@ -129,7 +128,7 @@ public class Joc {
 					return 2;
 					
 				default:
-					System.out.println("No has triat cap opciÛ correcta");
+					System.out.println("No has triat cap opci√≥ correcta");
 					output = "none";
 				}
 			}else{
@@ -148,7 +147,7 @@ public class Joc {
 					return 2;
 					
 				default:
-					System.out.println("No has triat cap opciÛ correcta");
+					System.out.println("No has triat cap opci√≥ correcta");
 					output = "none";
 				}
 			}
@@ -163,7 +162,7 @@ public class Joc {
 				int index_torn_actiu_real = i%jugadors_actius.size();
 				int moviment = torn_actiu(jugadors_actius.get(index_torn_actiu_real));
 				if(moviment == 1) {
-					index_total_torn = index_torn_actiu_real;
+					index_torn_relatiu = index_torn_actiu_real;
 					return false;
 				}else if(moviment == 2){
 					i -= 1;
@@ -174,7 +173,7 @@ public class Joc {
 				int index_torn_actiu_real = i%jugadors_actius.size();
 				int moviment = torn_actiu(jugadors_actius.get(index_torn_actiu_real), tauler.get_aposta_activa());
 				if(moviment == 1) {
-					index_total_torn = index_torn_actiu_real;
+					index_torn_relatiu = index_torn_actiu_real;
 					return false;
 				}else if(moviment == 2) {
 					i -= 1;
@@ -191,18 +190,39 @@ public class Joc {
 	}
 	
 	public boolean check_lastone() {
-		if(jugadors_actius.size() == 1) {
+		if(jugadors_actius.size() == 0 || jugadors_actius.size() == 1) {
 			return true;
 		}else {
 			return false;
 		}
 	}
 	
-	private void print_cartes() {
+	public void donar_cartes_taula() {
+		//Fa un check de quantes cartes hi ha a la taula per a tothom i en funci√≥ fa una cosa o una altra
+		if(tauler.cartes_sobre_taula.size() == 0) {
+			for(int i=0 ; i<3 ; i++) {
+				tauler.cartes_sobre_taula.add(baralla.pick_and_remove_Carta());
+			}
+		}else if(tauler.cartes_sobre_taula.size() == 5){
+			System.out.println("\nS'ha acabat el joc.");
+		}else {
+			tauler.cartes_sobre_taula.add(baralla.pick_and_remove_Carta());
+		}
+	}
+
+	private void print_cartes_jugadors() {
 		for(int i=0 ; i < jugadors_actius.size() ; i++ ) {
 			System.out.println("\nJugador "+jugadors_actius.get(i).getNom());
 			jugadors_actius.get(i).getMa();
 		}
+	}
+	
+	private void print_cartes_taula() {
+		System.out.println("\n----------------------------------");
+		for(int i=0 ; i < tauler.cartes_sobre_taula.size() ; i++ ) {
+			System.out.println("Carta "+(i+1)+" -> "+tauler.cartes_sobre_taula.get(i));
+		}
+		System.out.println("----------------------------------\n");
 	}
 	
 	private void donar_cartes_jugadors() {
@@ -211,9 +231,9 @@ public class Joc {
 		}
 	}
 	
-	private void add_jugador(String nom, int diners) {
-		this.jugadors_actius.add(new Jugador(nom, diners));
-	}
+//	private void add_jugador(String nom, int diners) {
+//		this.jugadors_actius.add(new Jugador(nom, diners));
+//	}
 	
 	private void remove_jugador(String nom) {
 		String iter_name;
@@ -226,63 +246,37 @@ public class Joc {
 		}
 	}
 	
-	private void generar_joc() {
-		index_total_torn = canviar_primer_torn();
-		boolean nou_torn;
+	public void generar_joc(int index_torn_absolut) {
+		boolean nou_torn, check_guanyador = true;
 		int first_time = 1;
 		
 		donar_cartes_jugadors();
-		print_cartes();
+		print_cartes_jugadors();
 		
 		for(int j=0; j<4 ; j++) {
 			do {
 				if(first_time == 1) {
-					nou_torn = sequencia_torns(index_total_torn, false);
+					nou_torn = sequencia_torns(index_torn_absolut, false);
+					first_time = 0;
 				}else{
-					nou_torn = sequencia_torns(index_total_torn, true);
+					nou_torn = sequencia_torns(index_torn_relatiu, true);
 				}
 			}while(!nou_torn);
 			if(check_lastone()) {
+				check_guanyador = false;
+				if(jugadors_actius.size() == 1) {
+					jugadors_actius.get(0).rebreDiners(tauler.get_diners_taula());
+				}
 				break;
 			}
 			flush_apostes();
 			first_time = 1;
+			donar_cartes_taula();
+			print_cartes_taula();
 		}
-	}
-
-	
-
-	//auqest metode no hauria d'estar a joc sino a partida
-	private int canviar_primer_torn() {
-//		System.out.println(jugadors_actius.size());
-		for(int i=0 ; i < jugadors_actius.size() ; i++) {
-//			System.out.println(i);
-			if(jugadors_actius.get(i).primerTorn == true) {
-				jugadors_actius.get(i).primerTorn = false;
-				jugadors_actius.get((i+1)%jugadors_actius.size()).primerTorn = true;
-				return i;
-			}
+		if(check_guanyador) {
+//			tauler.check_guanyador();
 		}
-		if(nou_primer_torn == true) {
-			jugadors_actius.get(0).primerTorn = true;
-			nou_primer_torn = false;
-			return 0;
-		}
-		return -1;
-	}
-	
-	
-	public static void main(String[] args) {
-		Joc joc = new Joc();
-//		System.out.println("hola");
-		joc.add_jugador("isaac", 10);
-		joc.add_jugador("lluis", 12);
-		joc.add_jugador("oriol", 14);
-//		joc.add_jugador("paula", 18);
-//		joc.add_jugador("maria", 5);
-//		System.out.println(joc.jugadors_actius.get(0).carta1);
-		joc.generar_joc();
-
 	}
 
 }
