@@ -46,12 +46,15 @@ public class Jugador {
 		return this.diners;
 	}
 	
+	public void rebreDiners(int dinersGuanyats) {
+		this.diners += dinersGuanyats;
+	}
+	
 	public void updateDiners_apostats(int diners) {
 		this.diners_apostats_enjoc = diners;
 	}
 
 	public int getDinersApostats() {
-		
 		return this.diners_apostats_enjoc;
 	}
 	
