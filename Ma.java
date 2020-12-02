@@ -11,4 +11,9 @@ public class Ma {
 		System.out.println("Carta 1: "+carta1.num +" - "+ carta1.pal);
 		System.out.println("Carta 2: "+carta2.num +" - "+ carta2.pal);
 	}
+	
+	public String _toString() {
+		return ""+carta1.num + carta1.pal + carta2.num + carta2.pal;
+	}
+	
 }
