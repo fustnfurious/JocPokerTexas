@@ -3,7 +3,7 @@ import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Taula {
-	
+/*	
 	public static void main(String[] args) {
 		ArrayList<Carta> pub = new ArrayList<>();
 		for(int i=0; i<7; i++) {
@@ -12,7 +12,7 @@ public class Taula {
 			pub.add(new Carta(num, pal));
 			
 		}
-		/*
+		
 		int pal =2;
 		pub.add(new Carta(1, pal));
 		pub.add(new Carta(10, pal));
@@ -20,7 +20,7 @@ public class Taula {
 		pub.add(new Carta(10, pal));
 		pub.add(new Carta(10, pal));
 		pub.add(new Carta(11, pal));
-		pub.add(new Carta(11, pal));*/
+		pub.add(new Carta(11, pal));
 	
 		Taula taula = new Taula();
 		for(int i=0; i<7; i++) {
@@ -28,6 +28,7 @@ public class Taula {
 		}
 		System.out.println(taula.escales(pub).toString());
 	}
+	*/
 	
 	public final int ESCALA_REIAL = 9;
 	public final int ESCALA_COLOR = 8;
@@ -42,13 +43,22 @@ public class Taula {
 	
 	protected ArrayList<Jugador> jugadors;
 	protected ArrayList<Carta> baralla;
-	protected ArrayList<Carta> pub;
+//	protected ArrayList<Carta> pub;
+	protected int diners;
+	protected int aposta_activa;
+	protected ArrayList<Carta> cartes_sobre_taula;
 	
-	public int guanyador() {
+	public Taula(){
+		this.diners = 0;
+		this.aposta_activa = 0;
+		this.cartes_sobre_taula = new ArrayList<>();
+	}	
+	
+	public int guanyador(ArrayList<Jugador> jugadors_finals, ArrayList<Carta> cartes_taula) {
 		int guanyador=0;
-		Rank guany = rankMa((Ma) jugadors.get(0).getMa(), pub);
-		for(int i=1; i<jugadors.size(); i++) {
-			if(guany.compareTo(rankMa((Ma) jugadors.get(i).getMa(), pub))<0) {
+		Rank guany = rankMa(jugadors_finals.get(0).ma, cartes_taula);
+		for(int i=1; i<jugadors_finals.size(); i++) {
+			if(guany.compareTo(rankMa(jugadors_finals.get(i).ma, cartes_taula))<0) {
 				guanyador=i;
 			}
 		}
@@ -103,8 +113,8 @@ public class Taula {
 	
 	public Rank rankMa(Ma ma, ArrayList<Carta> pub) {
 		ArrayList<Carta> tot = new ArrayList<>();
-		tot.add(ma.c1);
-		tot.add(ma.c2);
+		tot.add(ma.carta1);
+		tot.add(ma.carta2);
 		for(int i=0; i<pub.size(); i++) {
 			tot.add(pub.get(i));
 		}
@@ -227,8 +237,7 @@ public class Taula {
 		for(int i=0; i<cinc.size();i++) { //esborrar numeros repetits
 			for(int j=i+1; j<cinc.size(); j++) {
 				if(cinc.get(i).getNum() == cinc.get(j).getNum()) {
-					cinc.remove(i);
-					i--;
+					cinc.remove(j);
 				} else {
 					break;
 				}
@@ -237,10 +246,25 @@ public class Taula {
 		}
 		//trobar escales
 		for(int i=cinc.size()-1; i>cinc.size()-4;i--) { //itera nomes 3 vegades (escala de 5 en 7 cartes)
-			if(cinc.get(i).getNum()-4 == cinc.get(i-4).getNum()) {
-				escala=true;
-				cartaAlta=cinc.get(i).getNum();
-				break;
+			System.out.println(cinc.size());
+			if(cinc.size() == 7) {
+				if(cinc.get(i).getNum()-4 == cinc.get(i-4).getNum()) {
+					escala=true;
+					cartaAlta=cinc.get(i).getNum();
+					break;
+				}
+			}else if(cinc.size() == 6 && i > 3) {
+				if(cinc.get(i).getNum()-4 == cinc.get(i-4).getNum()) {
+					escala=true;
+					cartaAlta=cinc.get(i).getNum();
+					break;
+				}
+			}else if(cinc.size() == 5 && i > 3) {
+				if(cinc.get(i).getNum()-4 == cinc.get(i-4).getNum()) {
+					escala=true;
+					cartaAlta=cinc.get(i).getNum();
+					break;
+				}
 			}
 		}
 		
