@@ -1,25 +1,61 @@
-package PokerModel;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Taula {
 	
-	//public static void main(String[] args) {
-//		ArrayList<Carta> pub = new ArrayList<>();
-//		for(int i=0; i<7; i++) {
-//			int num = ThreadLocalRandom.current().nextInt(1, 13 + 1);
-//			int pal = ThreadLocalRandom.current().nextInt(1, 4 + 1);
-//			pub.add(new Carta(num, pal));
-			
-//		}
+	/*public static void main(String[] args) {
+	ArrayList<Carta> pub = new ArrayList<>();
+	ArrayList<Jugador> jugs = new ArrayList<>();
+	Baralla bar = new Baralla();
 	
-//		Taula taula = new Taula();
-//		for(int i=0; i<7; i++) {
-//			System.out.println(pub.get(i).toString());
-//		}
-//		System.out.println(taula.parellesTriosPokersFulls(pub).toString());
-//	}
+		for(int i=0; i<5; i++) {
+			
+			pub.add(bar.pick_and_remove_Carta());
+			
+		}
+	
+		Taula taula = new Taula();
+		
+		System.out.println("Taula: \n");
+		for(int i=0; i<5; i++) {
+			System.out.println(pub.get(i).toString());
+		}
+		
+		Jugador jug1 = new Jugador("lluis", 50);
+		jug1.nova_Ma(bar);
+		Jugador jug2 = new Jugador("isaac", 50);
+		jug2.nova_Ma(bar);
+		Jugador jug3 = new Jugador("orio", 50);
+		jug3.nova_Ma(bar);
+		Jugador jug4 = new Jugador("sandra", 50);
+		jug4.nova_Ma(bar);
+		Jugador jug5 = new Jugador("mireia", 50);
+		jug5.nova_Ma(bar);
+		Jugador jug6 = new Jugador("helena", 50);
+		jug6.nova_Ma(bar);
+		
+		jugs.add(jug1);
+		jugs.add(jug2);
+		jugs.add(jug3);
+		jugs.add(jug4);
+		jugs.add(jug5);
+		jugs.add(jug6);
+		
+		for(int i=0; i<jugs.size(); i++) {
+			System.out.println(jugs.get(i).getNom()+": ");
+			jugs.get(i).printMa();
+			System.out.println(taula.rankMa(jugs.get(i).getMa(), pub).toString());
+		}
+		
+		System.out.println("Guanyadors: ");
+		ArrayList<Jugador> guanyadors= taula.guanyador(jugs, pub);
+		for(int i=0; i<guanyadors.size(); i++) {
+			System.out.println(guanyadors.get(i).getNom() +",");
+		}
+		
+		//System.out.println(taula.parellesTriosPokersFulls(pub).toString());
+	}*/
+	
 	public final int ESCALA_REIAL = 9;
 	public final int ESCALA_COLOR = 8;
 	public final int POKER = 7;
@@ -44,15 +80,24 @@ public class Taula {
 		this.cartes_sobre_taula = new ArrayList<>();
 	}	
 	
-	public int guanyador(ArrayList<Jugador> jugadors_finals, ArrayList<Carta> cartes_taula) {
+	public ArrayList<Jugador> guanyador(ArrayList<Jugador> jugadors_finals, ArrayList<Carta> cartes_taula) {
 		int guanyador=0;
-		Rank guany = rankMa(jugadors_finals.get(0).ma, cartes_taula);
+		Rank guany = rankMa(jugadors_finals.get(0).getMa(), cartes_taula);
+		ArrayList<Jugador> guanyadors = new ArrayList<>();
 		for(int i=1; i<jugadors_finals.size(); i++) {
-			if(guany.compareTo(rankMa(jugadors_finals.get(i).ma, cartes_taula))<0) {
+			if(guany.compareTo(rankMa(jugadors_finals.get(i).getMa(), cartes_taula))<0) {
+				guany=rankMa(jugadors_finals.get(i).getMa(), cartes_taula);
 				guanyador=i;
 			}
 		}
-		return guanyador;
+		guanyadors.add(jugadors_finals.get(guanyador));
+		for(int i=0; i<jugadors_finals.size(); i++) {
+			if(guany.compareTo(rankMa(jugadors_finals.get(i).getMa(), cartes_taula))==0 && i!=guanyador) {
+				guanyadors.add(jugadors_finals.get(i));
+			}
+		}
+		//System.out.println(guany.toString());
+		return guanyadors;
 	}
 	
 	public class Rank implements Comparable<Rank>{
@@ -101,6 +146,7 @@ public class Taula {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public Rank rankMa(Ma ma, ArrayList<Carta> pub) {
 		ArrayList<Carta> tot = new ArrayList<>();
 		tot.add(ma.carta1);
@@ -108,11 +154,12 @@ public class Taula {
 		for(int i=0; i<pub.size(); i++) {
 			tot.add(pub.get(i));
 		}
+		
 //		System.out.println(tot.size());
 		ArrayList<Rank> ranks = new ArrayList<>();
 		ranks.add(parellesTriosPokersFulls(tot));
-		ranks.add(escales(tot));
-		ranks.add(color(tot));
+		ranks.add(escales((ArrayList<Carta>) tot.clone()));
+		ranks.add(color((ArrayList<Carta>) tot.clone()));
 		Collections.sort(ranks);
 		return ranks.get(ranks.size()-1);
 	}
@@ -192,19 +239,20 @@ public class Taula {
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	public Rank color(ArrayList<Carta> tot) {
-		ArrayList<Carta> aux = tot;
-		for(int i=0; i<4; i++) {
+		for(int i=1; i<5; i++) {
+			ArrayList<Carta> aux = (ArrayList<Carta>) tot.clone();
 			for(int j=0; j<aux.size(); j++) { //esborrem el que no sigui del pal
-				if(tot.get(j).getPal() != i) {
+				if(aux.get(j).getPal() != i) {
 					aux.remove(j);
 					j--;
 				}
 			}
 			if(aux.size()>4) {
+				Collections.sort(aux);
 				return new Rank(COLOR, aux.get(aux.size()-1).getNum());
 			}
-			aux=tot;
 		}
 		return new Rank(0,0);
 	}
@@ -226,6 +274,7 @@ public class Taula {
 			for(int j=i+1; j<cinc.size(); j++) {
 				if(cinc.get(i).getNum() == cinc.get(j).getNum()) {
 					cinc.remove(j);
+					j--;
 				} else {
 					break;
 				}
@@ -234,7 +283,7 @@ public class Taula {
 		}
 		//trobar escales
 		for(int i=cinc.size()-1; i>cinc.size()-4;i--) { //itera nomes 3 vegades (escala de 5 en 7 cartes)
-			System.out.println(cinc.size());
+//			System.out.println(cinc.size());
 			if(cinc.size() == 7) {
 				if(cinc.get(i).getNum()-4 == cinc.get(i-4).getNum()) {
 					escala=true;
@@ -278,15 +327,14 @@ public class Taula {
 				aux=tot;
 			}
 		}
-		
-		
-		
 		if(!escala) {
 			return new Rank(CARTA_ALTA, cartaAlta);
 		} else {
 			return new Rank(ESCALA, cartaAlta);
 		}
 	}
+	
+	
 	
 	public int afegir_diners_taula(int aposta) {
 		this.diners += aposta;

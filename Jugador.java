@@ -1,13 +1,11 @@
 
 public class Jugador {
-	
 	protected Ma ma;
 	protected int diners;
 	protected int diners_apostats_enjoc;
 	protected boolean primerTorn;
 	protected String nom;
 	protected boolean is_playing;
-	
 
 	public Jugador(String nom) {
 		this.nom = nom;
@@ -25,10 +23,14 @@ public class Jugador {
 		this.ma = new Ma(baralla);
 	}
 	
-	public void getMa() {
-		ma.printMa();
+	public void printMa() {
+		this.ma.printMa();
 	}
 
+	public Ma getMa() {
+		return this.ma;
+	}
+	
 	public String getNom() {
 		return this.nom;
 	}
