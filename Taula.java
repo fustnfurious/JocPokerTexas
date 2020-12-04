@@ -1,35 +1,25 @@
+package PokerModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Taula {
-/*	
-	public static void main(String[] args) {
-		ArrayList<Carta> pub = new ArrayList<>();
-		for(int i=0; i<7; i++) {
-			int num = ThreadLocalRandom.current().nextInt(1, 13 + 1);
-			int pal = ThreadLocalRandom.current().nextInt(1, 4 + 1);
-			pub.add(new Carta(num, pal));
+	
+	//public static void main(String[] args) {
+//		ArrayList<Carta> pub = new ArrayList<>();
+//		for(int i=0; i<7; i++) {
+//			int num = ThreadLocalRandom.current().nextInt(1, 13 + 1);
+//			int pal = ThreadLocalRandom.current().nextInt(1, 4 + 1);
+//			pub.add(new Carta(num, pal));
 			
-		}
-		
-		int pal =2;
-		pub.add(new Carta(1, pal));
-		pub.add(new Carta(10, pal));
-		pub.add(new Carta(10, pal));
-		pub.add(new Carta(10, pal));
-		pub.add(new Carta(10, pal));
-		pub.add(new Carta(11, pal));
-		pub.add(new Carta(11, pal));
+//		}
 	
-		Taula taula = new Taula();
-		for(int i=0; i<7; i++) {
-			System.out.println(pub.get(i).toString());
-		}
-		System.out.println(taula.escales(pub).toString());
-	}
-	*/
-	
+//		Taula taula = new Taula();
+//		for(int i=0; i<7; i++) {
+//			System.out.println(pub.get(i).toString());
+//		}
+//		System.out.println(taula.parellesTriosPokersFulls(pub).toString());
+//	}
 	public final int ESCALA_REIAL = 9;
 	public final int ESCALA_COLOR = 8;
 	public final int POKER = 7;
@@ -118,6 +108,7 @@ public class Taula {
 		for(int i=0; i<pub.size(); i++) {
 			tot.add(pub.get(i));
 		}
+//		System.out.println(tot.size());
 		ArrayList<Rank> ranks = new ArrayList<>();
 		ranks.add(parellesTriosPokersFulls(tot));
 		ranks.add(escales(tot));
@@ -127,9 +118,7 @@ public class Taula {
 	}
 	
 	
-	
-	public Rank parellesTriosPokersFulls (ArrayList<Carta> tot) {
-		
+	public Rank parellesTriosPokersFulls(ArrayList<Carta> tot) {
 		boolean parella=false;
 		boolean dobleParella=false;
 		boolean trio=false;
@@ -203,12 +192,11 @@ public class Taula {
 		
 	}
 
-	
 	public Rank color(ArrayList<Carta> tot) {
 		ArrayList<Carta> aux = tot;
 		for(int i=0; i<4; i++) {
 			for(int j=0; j<aux.size(); j++) { //esborrem el que no sigui del pal
-				if(tot.get(j).getPal()!=i) {
+				if(tot.get(j).getPal() != i) {
 					aux.remove(j);
 					j--;
 				}
@@ -221,7 +209,6 @@ public class Taula {
 		return new Rank(0,0);
 	}
 	
-	
 	public Rank escales(ArrayList<Carta> tot) {
 		boolean escala=false;
 		int cartaAlta;
@@ -233,6 +220,7 @@ public class Taula {
 		Collections.sort(tot);
 		cartaAlta = tot.get(tot.size()-1).getNum();
 		ArrayList<Carta> cinc = tot;
+//		System.out.println(cinc.size());
 		
 		for(int i=0; i<cinc.size();i++) { //esborrar numeros repetits
 			for(int j=i+1; j<cinc.size(); j++) {
@@ -299,6 +287,26 @@ public class Taula {
 			return new Rank(ESCALA, cartaAlta);
 		}
 	}
+	
+	public int afegir_diners_taula(int aposta) {
+		this.diners += aposta;
+		return this.diners;
+	}
+	
+	public int get_diners_taula() {
+		return this.diners;
+	}
+	
+	public void update_aposta_activa(int aposta) {
+		this.aposta_activa = aposta;
+	}
+	
+	public int get_aposta_activa() {
+		return this.aposta_activa;
+	}
+	
+	
+	
 	
 	
 	
