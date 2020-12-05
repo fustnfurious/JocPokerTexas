@@ -1,4 +1,4 @@
-package PokerModel;
+
 
 public class Ma {
 	protected Carta carta1;

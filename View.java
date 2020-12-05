@@ -1,4 +1,4 @@
-package PokerModel;
+
 
 public class View {
 	public static final int PASSAR = 1;
@@ -21,10 +21,10 @@ public class View {
 	public static final String ST_AMB_APOSTA = "El teu torn. Selecciona amb el numero.\n(1)Igualar\n(2)Apostar\n(3)Retirarse";
 	public static final String ST_AMB_ALLIN = "El teu torn. Selecciona amb el numero.\n(1)All-in\n(2)Retirar-se";
 	public static final String ST_MALA_APOSTA = "No tens tants diners. Redueix la aposta.";
-	public static final String ST_MALA_OPCIO = "No has triat cap opció correcta";
+	public static final String ST_MALA_OPCIO = "No has triat cap opcio correcta";
 	public static final String ST_SENSE_DINERS = "Ja no pots apostar, es passa el teu torn";
 	public static final String ST_FINALITZACIO = "\nS'ha acabat el joc";
-	public static final String ST_SEG_RONDA = "Passant a la següent ronda...";
+	public static final String ST_SEG_RONDA = "Passant a la seguent ronda...";
 	
 	public View() {
 	}
@@ -32,6 +32,8 @@ public class View {
 	public String printCartes_Jugador(ClientThread client, Taula tauler) {
 		String cartes = "**********************"
 				+client.jugador.ma
+				+"\n**********************"
+				+"\n-Diners disponibles: "+ client.jugador.getDiners()
 				+"\n**********************";
 		return cartes;
 	}
@@ -45,7 +47,7 @@ public class View {
 			info = info + "\nCarta: "+tauler.cartes_sobre_taula.get(i);
 		}
 		info = info + "\n------------------------"
-				+ "\n-Diners disponibles: "+ p1.jugador.getDiners()
+				+"\n-Diners disponibles: "+ p1.jugador.getDiners()
 				+"\n-Diners apostats: "+ p1.jugador.getDinersApostats()
 				+"\n-Aposta activa: "+ tauler.get_aposta_activa()
 				+"\n-Diners sobre la taula: "+tauler.get_diners_taula()

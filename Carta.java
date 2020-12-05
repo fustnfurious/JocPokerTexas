@@ -1,4 +1,4 @@
-package PokerModel;
+
 
 public class Carta implements Comparable<Carta> {
 	protected int num;

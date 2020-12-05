@@ -1,7 +1,7 @@
-package PokerModel;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Jugador implements Serializable{
 	protected Ma ma;
 	protected int diners;

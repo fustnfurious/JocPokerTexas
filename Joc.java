@@ -1,4 +1,4 @@
-package PokerModel;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -43,7 +43,7 @@ public class Joc{
 					System.out.println(View.ST_PASSAR);
 					break;
 					
-				case 2:  ///FALTA TRACTAR L'EXEMPCIÓ DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
+				case 2:  ///FALTA TRACTAR L'EXEMPCIO DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
 					boolean apostat_correctament = false;
 					while(apostat_correctament == false) {
 						output = client.getData();
@@ -137,7 +137,7 @@ public class Joc{
 					
 					break;
 					
-				case 2:  ///FALTA TRACTAR L'EXEMPCIÓ DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
+				case 2:  ///FALTA TRACTAR L'EXEMPCIO DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
 					output = 0;
 					boolean apostat_correctament = false;
 					while(apostat_correctament == false) {
@@ -256,7 +256,7 @@ public class Joc{
 	}
 	
 	public void donar_cartes_taula() {
-		//Fa un check de quantes cartes hi ha a la taula per a tothom i en funció fa una cosa o una altra
+		//Fa un check de quantes cartes hi ha a la taula per a tothom i en funcio fa una cosa o una altra
 		if(tauler.cartes_sobre_taula.size() == 0) {
 			for(int i=0 ; i<3 ; i++) {
 				tauler.cartes_sobre_taula.add(baralla.pick_and_remove_Carta());

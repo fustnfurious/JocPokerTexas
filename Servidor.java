@@ -1,4 +1,4 @@
-package PokerModel;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -27,8 +27,11 @@ public class Servidor {
 				ct.start();
 				try {
 					Thread.sleep(2000);
-					Jugador jugador = (Jugador) ct.in_server.readObject();
-					ct.jugador = jugador;
+					String nomClient = (String) ct.in_server.readObject();
+					int dinersClient = (Integer) ct.in_server.readObject();
+					//Jugador jugador = (Jugador) ct.in_server.readObject();
+					Jugador jugadorClient = new Jugador(nomClient, dinersClient);
+					ct.jugador = jugadorClient;
 					partida.jugadors.add(ct);
 				} catch (Exception e) {
 					e.printStackTrace();
