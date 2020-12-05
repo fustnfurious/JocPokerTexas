@@ -1,4 +1,4 @@
-package PokerModel;
+
 
 public class Carta implements Comparable<Carta> {
 	int num;
@@ -23,28 +23,38 @@ public class Carta implements Comparable<Carta> {
 	}
 	
 	public String toString() {
-		return num +" - "+tradueix(pal);
+		return numToString() +" de "+palToString();
 	}
 	
-	public String tradueix(int pal) {
+	public String palToString(){
 		String nom_pal;
-		switch(pal) {
+		switch(this.pal) {
 		case 1:
-			nom_pal = "pica";
+			nom_pal = "Piques";
 			break;
 		case 2:
-			nom_pal = "cor";
+			nom_pal = "Cors";
 			break;
 		case 3:
-			nom_pal = "trebol";
+			nom_pal = "Trebols";
 			break;
 		case 4:
-			nom_pal = "diamant";
+			nom_pal = "Diamants";
 			break;
 		default:
 			nom_pal = "inidentificat";
 		}
 		return nom_pal;
+	}
+	
+	public String numToString() {
+		switch(this.num) {
+		case 14: return "As";
+		case 13: return "K";
+		case 12: return "Q";
+		case 11: return "J";
+		default: return ""+num;
+		}
 	}
 
 }
