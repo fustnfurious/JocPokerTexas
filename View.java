@@ -8,6 +8,7 @@ public class View {
 	public static final int AMB_ALLIN = 7;
 	public static final int MALA_APOSTA = 8;
 	public static final int BONA_APOSTA = 9;
+	public static final int SENSE_DINERS = 10;
 	public static final int INFO_GUANYADORS_INCOMING = 11;
 	
 	public static final String ST_PASSAR = "Passant torn..."; 
@@ -20,6 +21,7 @@ public class View {
 	public static final String ST_MALA_APOSTA = "No tens tants diners. Redueix la aposta.";
 	public static final String ST_MALA_OPCIO = "No has triat cap opció correcta";
 	public static final String SEG_RONDA = "Passant a la següent ronda...";
+	public static final String ST_SENSE_DINERS = "Ja no pots apostar, es passa el teu torn";
 	
 	
 	public View() {
@@ -49,4 +51,12 @@ public class View {
 		
 		return info;
 	}
+	protected void print_cartes_taula(Taula tauler) {
+		System.out.println("\n----------------------------------");
+		for(int i=0 ; i < tauler.cartes_sobre_taula.size() ; i++ ) {
+			System.out.println("Carta "+(i+1)+" -> "+tauler.cartes_sobre_taula.get(i));
+		}
+		System.out.println("----------------------------------\n");
+	}
+	
 }
