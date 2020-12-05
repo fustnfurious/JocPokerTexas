@@ -148,6 +148,10 @@ public class Client {
 			System.out.println(info);
 			System.out.println(View.SEG_RONDA);
 			break;
+				
+		case View.SENSE_DINERS:
+			System.out.println(View.ST_SENSE_DINERS);
+			break;
 		
 		}
 		
