@@ -7,48 +7,145 @@ import java.util.*;
 
 public class Client {
 	protected Socket socket;
-	Jugador jugador_client;
-	ObjectInputStream in_client;
-	OutputStream out_client;
-	ObjectOutputStream out_ob_client;
-	boolean exit_player;
-	Scanner scanner = new Scanner(System.in);
+	protected Jugador jugador_client;
+	protected ObjectInputStream in_client;
+	protected ObjectOutputStream out_client;
+	
+	private boolean exit_player, mala_opcio;
+	private int opcio;
+	private Scanner scanner = new Scanner(System.in);
 
 	public Client(String nom, int diners) throws InterruptedException {
 		jugador_client = new Jugador(nom, diners);
 		this.exit_player = false;
 		try {
 			socket = new Socket("localhost", 8888);
-			out_client = socket.getOutputStream();
 			in_client = new ObjectInputStream(socket.getInputStream());
-			Thread.sleep(100);
-			out_ob_client = new ObjectOutputStream(out_client);
-			out_ob_client.writeObject(jugador_client);
+			out_client = new ObjectOutputStream(socket.getOutputStream());
+			
+			out_client.writeObject(jugador_client);
 			out_client.flush();
+			
 			String line = (String) in_client.readObject();
 			System.out.println(line);
-			} catch (UnknownHostException e) {
-			e.printStackTrace();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		while(!exit_player) {
 			try {
-				String st = (String) in_client.readObject();
-				System.out.println(st);
-				Thread.sleep(1000);
-				out_ob_client.writeInt(Integer.parseInt(scanner.nextLine()));
+				String situacio_inicial = (String) in_client.readObject();
+				System.out.println(situacio_inicial);
+				boolean joc_actiu = true;
+				while(joc_actiu) {
+					String situacio_ronda = (String) in_client.readObject();
+					System.out.println(situacio_ronda);
+					Thread.sleep(400);
+					ronda();
+				}
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 		}
 	}
 	
-//	public void addIOServer(ObjectOutputStream out, ObjectInputStream in) {
-//		this.out_server = out;
-//		this.in_server = in;
-//	}
+	//cada cop que el jugador te un torn
+	private void ronda() throws Exception{
+		opcio = in_client.readInt();
+		mala_opcio = true;
+		switch(opcio) {
+		case View.SENSE_APOSTA:
+			while(mala_opcio) {
+				System.out.println(View.ST_SENSE_APOSTA);
+				opcio = scanner.nextInt();
+				Thread.sleep(1000);
+				out_client.writeInt(opcio);
+				out_client.flush();
+				mala_opcio = false;
+				switch(opcio) {
+				case 1:
+					System.out.println(View.ST_PASSAR);
+					break;
+				case 2:
+					do {
+						System.out.println(View.ST_APOSTAR);
+						opcio = scanner.nextInt();
+						Thread.sleep(1000);
+						out_client.writeInt(opcio);
+						out_client.flush();
+					}while(in_client.readInt() == View.MALA_APOSTA);
+						
+					break;
+				case 3:
+					System.out.println(View.ST_RETIRAR);
+					break;
+					
+				default:
+					System.out.println(View.ST_MALA_OPCIO);
+					mala_opcio = true;
+				}
+			}
+			break;
+			
+		case View.AMB_APOSTA:
+			while(mala_opcio) {
+				System.out.println(View.ST_AMB_APOSTA);
+				opcio = scanner.nextInt();
+				Thread.sleep(1000);
+				out_client.writeInt(opcio);
+				out_client.flush();
+				mala_opcio = false;
+				switch(opcio) {
+				case 1:
+					System.out.println(View.ST_IGUALAR);
+					break;
+				case 2:
+					do {
+						System.out.println(View.ST_APOSTAR);
+						opcio = scanner.nextInt();
+						Thread.sleep(1000);
+						out_client.writeInt(opcio);
+						out_client.flush();
+					}while(in_client.readInt() == View.MALA_APOSTA);
+						
+					break;
+				case 3:
+					System.out.println(View.ST_RETIRAR);
+					break;
+					
+				default:
+					System.out.println(View.ST_MALA_OPCIO);
+					mala_opcio = true;
+				}
+			}
+			break;
+		case View.AMB_ALLIN:
+			while(mala_opcio) {
+				System.out.println(View.ST_AMB_ALLIN);
+				opcio = scanner.nextInt();
+				Thread.sleep(1000);
+				out_client.writeInt(opcio);
+				out_client.flush();
+				mala_opcio = false;
+				switch(opcio) {
+				case 1:
+					System.out.println(View.ST_AMB_ALLIN);
+					break;
+				case 2:
+					System.out.println(View.ST_RETIRAR);
+					break;
+				default:
+					System.out.println(View.ST_MALA_OPCIO);
+					mala_opcio = true;
+				}
+			}
+			break;
+		}
+		
+	}
 	
 	public static void main(String[] args){
 		Scanner scanner = new Scanner(System.in);
@@ -57,11 +154,12 @@ public class Client {
 		System.out.println("Quants diners vols posar?");
 		int diners_inicials = scanner.nextInt();
 		
-		
 		try {
 			Client client = new Client(input, diners_inicials);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			scanner.close();
 		}
 
 	}

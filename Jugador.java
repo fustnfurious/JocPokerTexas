@@ -1,5 +1,8 @@
+package PokerModel;
 
-public class Jugador {
+import java.io.Serializable;
+
+public class Jugador implements Serializable{
 	protected Ma ma;
 	protected int diners;
 	protected int diners_apostats_enjoc;

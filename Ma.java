@@ -1,3 +1,5 @@
+package PokerModel;
+
 public class Ma {
 	protected Carta carta1;
 	protected Carta carta2;
@@ -8,12 +10,11 @@ public class Ma {
 	}
 	
 	public void printMa() {
-		System.out.println("Carta 1: "+carta1.num +" - "+ carta1.pal);
-		System.out.println("Carta 2: "+carta2.num +" - "+ carta2.pal);
+		System.out.println("Carta: "+carta1.num +" - "+ carta1.pal);
+		System.out.println("Carta: "+carta2.num +" - "+ carta2.pal);
 	}
 	
-	public String _toString() {
-		return ""+carta1.num + carta1.pal + carta2.num + carta2.pal;
+	public String toString() {
+		return "\nCarta: "+carta1 + "\nCarta: "+carta2;
 	}
-	
 }

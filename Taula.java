@@ -1,60 +1,8 @@
+package PokerModel;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Taula {
-	
-	/*public static void main(String[] args) {
-	ArrayList<Carta> pub = new ArrayList<>();
-	ArrayList<Jugador> jugs = new ArrayList<>();
-	Baralla bar = new Baralla();
-	
-		for(int i=0; i<5; i++) {
-			
-			pub.add(bar.pick_and_remove_Carta());
-			
-		}
-	
-		Taula taula = new Taula();
-		
-		System.out.println("Taula: \n");
-		for(int i=0; i<5; i++) {
-			System.out.println(pub.get(i).toString());
-		}
-		
-		Jugador jug1 = new Jugador("lluis", 50);
-		jug1.nova_Ma(bar);
-		Jugador jug2 = new Jugador("isaac", 50);
-		jug2.nova_Ma(bar);
-		Jugador jug3 = new Jugador("orio", 50);
-		jug3.nova_Ma(bar);
-		Jugador jug4 = new Jugador("sandra", 50);
-		jug4.nova_Ma(bar);
-		Jugador jug5 = new Jugador("mireia", 50);
-		jug5.nova_Ma(bar);
-		Jugador jug6 = new Jugador("helena", 50);
-		jug6.nova_Ma(bar);
-		
-		jugs.add(jug1);
-		jugs.add(jug2);
-		jugs.add(jug3);
-		jugs.add(jug4);
-		jugs.add(jug5);
-		jugs.add(jug6);
-		
-		for(int i=0; i<jugs.size(); i++) {
-			System.out.println(jugs.get(i).getNom()+": ");
-			jugs.get(i).printMa();
-			System.out.println(taula.rankMa(jugs.get(i).getMa(), pub).toString());
-		}
-		
-		System.out.println("Guanyadors: ");
-		ArrayList<Jugador> guanyadors= taula.guanyador(jugs, pub);
-		for(int i=0; i<guanyadors.size(); i++) {
-			System.out.println(guanyadors.get(i).getNom() +",");
-		}
-		
-		//System.out.println(taula.parellesTriosPokersFulls(pub).toString());
-	}*/
 	
 	public final int ESCALA_REIAL = 9;
 	public final int ESCALA_COLOR = 8;
@@ -67,7 +15,7 @@ public class Taula {
 	public final int PARELLA = 1;
 	public final int CARTA_ALTA = 0;
 	
-	protected ArrayList<Jugador> jugadors;
+	protected ArrayList<Client> jugadors;
 	protected ArrayList<Carta> baralla;
 //	protected ArrayList<Carta> pub;
 	protected int diners;
@@ -80,19 +28,19 @@ public class Taula {
 		this.cartes_sobre_taula = new ArrayList<>();
 	}	
 	
-	public ArrayList<Jugador> guanyador(ArrayList<Jugador> jugadors_finals, ArrayList<Carta> cartes_taula) {
+	public ArrayList<ClientThread> guanyador(ArrayList<ClientThread> jugadors_finals, ArrayList<Carta> cartes_taula) {
 		int guanyador=0;
-		Rank guany = rankMa(jugadors_finals.get(0).getMa(), cartes_taula);
-		ArrayList<Jugador> guanyadors = new ArrayList<>();
+		Rank guany = rankMa(jugadors_finals.get(0).jugador.getMa(), cartes_taula);
+		ArrayList<ClientThread> guanyadors = new ArrayList<>();
 		for(int i=1; i<jugadors_finals.size(); i++) {
-			if(guany.compareTo(rankMa(jugadors_finals.get(i).getMa(), cartes_taula))<0) {
-				guany=rankMa(jugadors_finals.get(i).getMa(), cartes_taula);
+			if(guany.compareTo(rankMa(jugadors_finals.get(i).jugador.getMa(), cartes_taula))<0) {
+				guany=rankMa(jugadors_finals.get(i).jugador.getMa(), cartes_taula);
 				guanyador=i;
 			}
 		}
 		guanyadors.add(jugadors_finals.get(guanyador));
 		for(int i=0; i<jugadors_finals.size(); i++) {
-			if(guany.compareTo(rankMa(jugadors_finals.get(i).getMa(), cartes_taula))==0 && i!=guanyador) {
+			if(guany.compareTo(rankMa(jugadors_finals.get(i).jugador.getMa(), cartes_taula))==0 && i!=guanyador) {
 				guanyadors.add(jugadors_finals.get(i));
 			}
 		}
@@ -144,7 +92,6 @@ public class Taula {
 			return "Ranking: " + ran + "  Carta Alta = " + this.numCartaAlta + "\n";
 		}
 	}
-	
 	
 	@SuppressWarnings("unchecked")
 	public Rank rankMa(Ma ma, ArrayList<Carta> pub) {
@@ -268,7 +215,6 @@ public class Taula {
 		Collections.sort(tot);
 		cartaAlta = tot.get(tot.size()-1).getNum();
 		ArrayList<Carta> cinc = tot;
-//		System.out.println(cinc.size());
 		
 		for(int i=0; i<cinc.size();i++) { //esborrar numeros repetits
 			for(int j=i+1; j<cinc.size(); j++) {
@@ -283,7 +229,6 @@ public class Taula {
 		}
 		//trobar escales
 		for(int i=cinc.size()-1; i>cinc.size()-4;i--) { //itera nomes 3 vegades (escala de 5 en 7 cartes)
-//			System.out.println(cinc.size());
 			if(cinc.size() == 7) {
 				if(cinc.get(i).getNum()-4 == cinc.get(i-4).getNum()) {
 					escala=true;
@@ -335,7 +280,6 @@ public class Taula {
 	}
 	
 	
-	
 	public int afegir_diners_taula(int aposta) {
 		this.diners += aposta;
 		return this.diners;
@@ -352,12 +296,5 @@ public class Taula {
 	public int get_aposta_activa() {
 		return this.aposta_activa;
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 }

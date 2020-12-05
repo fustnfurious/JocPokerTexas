@@ -1,3 +1,4 @@
+package PokerModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -6,7 +7,7 @@ public class Baralla {
 
 	ArrayList<Integer> numeros = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12));
 	ArrayList<Integer> pals = new ArrayList<>(Arrays.asList(1,2,3,4));
-//	ArrayList<String> pals = new ArrayList<>(Arrays.asList("Cor","Pica","Trebol","Diamant"));
+	//	ArrayList<String> pals = new ArrayList<>(Arrays.asList("Cor","Pica","Trebol","Diamant"));
 	ArrayList<Carta> cartes = new ArrayList<>();
 	private Random randomGenerator = new Random();
 	
