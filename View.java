@@ -1,5 +1,3 @@
-package PokerModel;
-
 public class View {
 	public static final int PASSAR = 1;
 	public static final int APOSTAR = 2;
@@ -10,6 +8,7 @@ public class View {
 	public static final int AMB_ALLIN = 7;
 	public static final int MALA_APOSTA = 8;
 	public static final int BONA_APOSTA = 9;
+	public static final int INFO_GUANYADORS_INCOMING = 11;
 	
 	public static final String ST_PASSAR = "Passant torn..."; 
 	public static final String ST_APOSTAR = "Quant vols apostar?";
@@ -19,7 +18,9 @@ public class View {
 	public static final String ST_AMB_APOSTA = "El teu torn. Selecciona amb el numero.\n(1)Igualar\n(2)Apostar\n(3)Retirarse";
 	public static final String ST_AMB_ALLIN = "El teu torn. Selecciona amb el numero.\n(1)All-in\n(2)Retirar-se";
 	public static final String ST_MALA_APOSTA = "No tens tants diners. Redueix la aposta.";
-	public static final String ST_MALA_OPCIO = "No has triat cap opci� correcta";
+	public static final String ST_MALA_OPCIO = "No has triat cap opció correcta";
+	public static final String SEG_RONDA = "Passant a la següent ronda...";
+	
 	
 	public View() {
 	}

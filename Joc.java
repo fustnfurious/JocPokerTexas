@@ -1,4 +1,4 @@
-package PokerModel;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -6,6 +6,7 @@ import java.util.*;
 public class Joc{
 	
 	protected ArrayList<ClientThread> jugadors_actius = new ArrayList<>();
+	protected ArrayList<ClientThread> jugadors_inici = new ArrayList<>();
 	private Taula tauler = new Taula();
 	private Baralla baralla;
 	Scanner scanner = new Scanner(System.in);
@@ -15,6 +16,7 @@ public class Joc{
 	public Joc(ArrayList<ClientThread> jugadors_inicials){
 		this.baralla = new Baralla();
 		this.jugadors_actius = new ArrayList<ClientThread>(jugadors_inicials);
+		this.jugadors_inici = new ArrayList<ClientThread>(jugadors_inicials);
 		this.view = new View();
 	}
 	
@@ -39,7 +41,7 @@ public class Joc{
 				System.out.println(View.ST_PASSAR);
 				break;
 				
-			case 2:  ///FALTA TRACTAR L'EXEMPCIÓ DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
+			case 2:  ///FALTA TRACTAR L'EXEMPCIï¿½ DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
 				boolean apostat_correctament = false;
 				while(apostat_correctament == false) {
 					output = client.getData();
@@ -121,7 +123,7 @@ public class Joc{
 					
 					break;
 					
-				case 2:  ///FALTA TRACTAR L'EXEMPCIÓ DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
+				case 2:  ///FALTA TRACTAR L'EXEMPCIï¿½ DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
 					output = 0;
 					boolean apostat_correctament = false;
 					while(apostat_correctament == false) {
@@ -247,7 +249,7 @@ public class Joc{
 	}
 	
 	public void donar_cartes_taula() {
-		//Fa un check de quantes cartes hi ha a la taula per a tothom i en funció fa una cosa o una altra
+		//Fa un check de quantes cartes hi ha a la taula per a tothom i en funciï¿½ fa una cosa o una altra
 		if(tauler.cartes_sobre_taula.size() == 0) {
 			for(int i=0 ; i<3 ; i++) {
 				tauler.cartes_sobre_taula.add(baralla.pick_and_remove_Carta());
@@ -321,9 +323,26 @@ public class Joc{
 			print_cartes_taula();
 		}
 		if(check_guanyador) {
-			ArrayList<ClientThread> guanyador = tauler.guanyador(jugadors_actius , tauler.cartes_sobre_taula);
-			System.out.println("ha guanyat algu");
-//			System.out.println("Ha guanyat: "+jugadors_actius.get(guanyador).jugador.getNom());
+			ArrayList<ClientThread> guanyadors = tauler.guanyador(jugadors_actius , tauler.cartes_sobre_taula);
+			int diners_guanyador = tauler.get_diners_taula()/guanyadors.size();
+			String info_guanyadors = "Guanyadors:\n";
+			for(int i=0; i<guanyadors.size(); i++) {
+				guanyadors.get(i).getJugador().rebreDiners(diners_guanyador); //repartir diners
+				info_guanyadors+= "- "+guanyadors.get(i).getJugador().getNom()+"\n";
+			}
+			info_guanyadors+= tauler.rankMa(guanyadors.get(0).getJugador().getMa(), tauler.getCartesTaula()).toString()+"\n";
+			for(int i=0; i<jugadors_inici.size(); i++) {
+				jugadors_actius.get(i).getOutput().writeInt(View.INFO_GUANYADORS_INCOMING);
+				jugadors_actius.get(i).getOutput().flush();
+				jugadors_actius.get(i).getOutput().writeObject(info_guanyadors);
+				jugadors_actius.get(i).getOutput().flush();
+			}
+			tauler.update_aposta_activa(0);
+			tauler.reset_diners_taula();
+			
+			
+			
+			
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package PokerModel;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -58,6 +58,14 @@ class ClientThread extends Thread {
 	
 	public ClientThread(Socket s) {
 		this.s = s;
+	}
+	
+	public Jugador getJugador() {
+		return this.jugador;
+	}
+	
+	public ObjectOutputStream getOutput() {
+		return this.out_server;
 	}
 	
 	@Override

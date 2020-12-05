@@ -1,4 +1,4 @@
-package PokerModel;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -27,6 +27,10 @@ public class Taula {
 		this.aposta_activa = 0;
 		this.cartes_sobre_taula = new ArrayList<>();
 	}	
+	
+	public ArrayList<Carta> getCartesTaula(){
+		return this.cartes_sobre_taula;
+	}
 	
 	public ArrayList<ClientThread> guanyador(ArrayList<ClientThread> jugadors_finals, ArrayList<Carta> cartes_taula) {
 		int guanyador=0;
@@ -287,6 +291,10 @@ public class Taula {
 	
 	public int get_diners_taula() {
 		return this.diners;
+	}
+	
+	public void reset_diners_taula() {
+		this.diners=0;
 	}
 	
 	public void update_aposta_activa(int aposta) {

@@ -1,4 +1,4 @@
-package PokerModel;
+
 
 import java.io.*;
 import java.net.Socket;
@@ -143,6 +143,12 @@ public class Client {
 				}
 			}
 			break;
+		case View.INFO_GUANYADORS_INCOMING: 
+			String info = (String) in_client.readObject();
+			System.out.println(info);
+			System.out.println(View.SEG_RONDA);
+			break;
+		
 		}
 		
 	}
