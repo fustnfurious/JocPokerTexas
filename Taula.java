@@ -1,4 +1,4 @@
-
+package PokerModel;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -17,7 +17,6 @@ public class Taula {
 	
 	protected ArrayList<Client> jugadors;
 	protected ArrayList<Carta> baralla;
-//	protected ArrayList<Carta> pub;
 	protected int diners;
 	protected int aposta_activa;
 	protected ArrayList<Carta> cartes_sobre_taula;
@@ -27,10 +26,6 @@ public class Taula {
 		this.aposta_activa = 0;
 		this.cartes_sobre_taula = new ArrayList<>();
 	}	
-	
-	public ArrayList<Carta> getCartesTaula(){
-		return this.cartes_sobre_taula;
-	}
 	
 	public ArrayList<ClientThread> guanyador(ArrayList<ClientThread> jugadors_finals, ArrayList<Carta> cartes_taula) {
 		int guanyador=0;
@@ -93,7 +88,7 @@ public class Taula {
 			break;
 			default: ran="Carta Alta";
 			}
-			return "Ranking: " + ran + "  Carta Alta = " + this.numCartaAlta + "\n";
+			return "\nRanking -> " + ran + "  Carta Alta: " + this.numCartaAlta + "\n";
 		}
 	}
 	
@@ -106,7 +101,6 @@ public class Taula {
 			tot.add(pub.get(i));
 		}
 		
-//		System.out.println(tot.size());
 		ArrayList<Rank> ranks = new ArrayList<>();
 		ranks.add(parellesTriosPokersFulls(tot));
 		ranks.add(escales((ArrayList<Carta>) tot.clone()));
@@ -293,16 +287,20 @@ public class Taula {
 		return this.diners;
 	}
 	
-	public void reset_diners_taula() {
-		this.diners=0;
-	}
-	
 	public void update_aposta_activa(int aposta) {
 		this.aposta_activa = aposta;
 	}
 	
 	public int get_aposta_activa() {
 		return this.aposta_activa;
+	}
+	
+	public ArrayList<Carta> getCartesTaula(){
+		return this.cartes_sobre_taula;
+	}
+	
+	public void reset_diners_taula() {
+		this.diners=0;
 	}
 	
 }

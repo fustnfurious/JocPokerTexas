@@ -1,8 +1,8 @@
-
+package PokerModel;
 
 public class Carta implements Comparable<Carta> {
-	int num;
-	int pal;
+	protected int num;
+	protected int pal;
 
 	public Carta(int num, int pal) {
 		this.num = num;

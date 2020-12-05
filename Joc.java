@@ -1,4 +1,4 @@
-
+package PokerModel;
 import java.io.IOException;
 import java.util.*;
 
@@ -9,7 +9,6 @@ public class Joc{
 	protected ArrayList<ClientThread> jugadors_inici = new ArrayList<>();
 	private Taula tauler = new Taula();
 	private Baralla baralla;
-	Scanner scanner = new Scanner(System.in);
 	private int index_torn_relatiu;
 	protected View view;
 	
@@ -23,69 +22,75 @@ public class Joc{
 	
 	public int torn_actiu(ClientThread client) throws Exception {
 		int output = -1;
-		try {
-			client.out_server.writeObject(view.printInfo_Jugador(client, tauler));
-			client.out_server.flush();
-			Thread.sleep(200);
+		client.out_server.writeObject(view.printInfo_Jugador(client, tauler));
+		client.out_server.flush();
+		Thread.sleep(200);
+		if(client.jugador.getDiners() != 0) {
 			client.out_server.writeInt(View.SENSE_APOSTA);
 			client.out_server.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+		}else {
+			client.out_server.writeInt(View.SENSE_DINERS);
+			client.out_server.flush();
 		}
-		while(output == -1) {
-			Thread.sleep(100);
-			output = client.getData();
-			
-			switch(output) {
-			case 1:
-				System.out.println(View.ST_PASSAR);
-				break;
+		
+		if(client.jugador.getDiners() != 0) {
+			while(output == -1) {
+				Thread.sleep(100);
+				output = client.getData();
 				
-			case 2:  ///FALTA TRACTAR L'EXEMPCIï¿½ DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
-				boolean apostat_correctament = false;
-				while(apostat_correctament == false) {
-					output = client.getData();
+				switch(output) {
+				case 1:
+					System.out.println(View.ST_PASSAR);
+					break;
 					
-				    //Comprova que tingui diners per la aposta
-				    if(output <= client.jugador.getDiners()) {
-				    	apostat_correctament = true;
-				    	try {
-							client.out_server.writeInt(View.BONA_APOSTA);
-							client.out_server.flush();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-				    }else{
-				    	System.out.println( "No ha apostat be. Pots apostar fins: "+client.jugador.getDiners());
-				    	try {
-							client.out_server.writeInt(View.MALA_APOSTA);
-							client.out_server.flush();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-				    }
+				case 2:  ///FALTA TRACTAR L'EXEMPCIÓ DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
+					boolean apostat_correctament = false;
+					while(apostat_correctament == false) {
+						output = client.getData();
+						
+					    //Comprova que tingui diners per la aposta
+					    if(output <= client.jugador.getDiners()) {
+					    	apostat_correctament = true;
+					    	try {
+								client.out_server.writeInt(View.BONA_APOSTA);
+								client.out_server.flush();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+					    }else{
+					    	System.out.println( "No ha apostat be. Pots apostar fins: "+client.jugador.getDiners());
+					    	try {
+								client.out_server.writeInt(View.MALA_APOSTA);
+								client.out_server.flush();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+					    }
+					}
+					//retiro els diners del jugador i li faig un update del que porta apostat a la taula
+					int diners_restants = client.jugador.apostar(output);
+					client.jugador.updateDiners_apostats(output);
+					System.out.println(client.jugador.getNom()+" ha apostat: "+output);
+					System.out.println(client.jugador.getNom()+" li queden: "+diners_restants);
+					
+					//afegeixo els diners sobre la taula i actualitzo la aposta
+					tauler.afegir_diners_taula(output);
+					tauler.update_aposta_activa(output);
+					System.out.println("Hi ha "+tauler.get_diners_taula()+" diners apostats.");
+	
+					return 1;//indica que hi ha una nova sequencia de torns
+					
+				case 3:
+					System.out.println(View.ST_RETIRAR);
+					remove_jugador_actiu(client.jugador.getNom());
+					return 2;
+					
+				default:
+					output = -1;
 				}
-				//retiro els diners del jugador i li faig un update del que porta apostat a la taula
-				int diners_restants = client.jugador.apostar(output);
-				client.jugador.updateDiners_apostats(output);
-				System.out.println(client.jugador.getNom()+" ha apostat: "+output);
-				System.out.println(client.jugador.getNom()+" li queden: "+diners_restants);
-				
-				//afegeixo els diners sobre la taula i actualitzo la aposta
-				tauler.afegir_diners_taula(output);
-				tauler.update_aposta_activa(output);
-				System.out.println("Hi ha "+tauler.get_diners_taula()+" diners apostats.");
-
-				return 1;//indica que hi ha una nova sequencia de torns
-				
-			case 3:
-				System.out.println(View.ST_RETIRAR);
-				remove_jugador(client.jugador.getNom());
-				return 2;
-				
-			default:
-				output = -1;
 			}
+		} else {
+			System.out.println("Passant torn");
 		}
 		return 0;//indica que no hi ha una nova sequencia de torns
 	}
@@ -94,7 +99,16 @@ public class Joc{
 		int output = -1;
 		while(output == -1) {
 			//separo dos casos, nomes puc fer all-in o puc aumentar la aposta
-			if(client.jugador.getDiners() > aposta_actual - client.jugador.getDinersApostats()) {
+			if(client.jugador.getDiners() == 0) {
+				client.out_server.writeObject(view.printInfo_Jugador(client, tauler));
+				client.out_server.flush();
+				Thread.sleep(200);
+				client.out_server.writeInt(View.SENSE_DINERS);
+				client.out_server.flush();
+				Thread.sleep(100);
+				return 101;
+				
+			}else if(client.jugador.getDiners() > aposta_actual - client.jugador.getDinersApostats()) {
 				
 				client.out_server.writeObject(view.printInfo_Jugador(client, tauler));
 				client.out_server.flush();
@@ -123,7 +137,7 @@ public class Joc{
 					
 					break;
 					
-				case 2:  ///FALTA TRACTAR L'EXEMPCIï¿½ DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
+				case 2:  ///FALTA TRACTAR L'EXEMPCIÓ DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
 					output = 0;
 					boolean apostat_correctament = false;
 					while(apostat_correctament == false) {
@@ -163,27 +177,20 @@ public class Joc{
 					
 				case 3:
 					System.out.println(View.ST_RETIRAR);
-					remove_jugador(client.jugador.getNom());
+					remove_jugador_actiu(client.jugador.getNom());
 					return 2;
 					
 				default:
 					output = -1;
 				}
-			}else{
-				try {
-					client.out_server.writeObject(view.printInfo_Jugador(client, tauler));
-					client.out_server.flush();
-					Thread.sleep(200);
-					client.out_server.writeInt(View.AMB_ALLIN);
-					client.out_server.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			}else {
+				client.out_server.writeObject(view.printInfo_Jugador(client, tauler));
+				client.out_server.flush();
+				Thread.sleep(200);
+				client.out_server.writeInt(View.AMB_ALLIN);
+				client.out_server.flush();
+				Thread.sleep(100);
+
 				output = client.getData();
 				switch(output) {
 				case 1:
@@ -194,7 +201,7 @@ public class Joc{
 					
 				case 2:
 					System.out.println(View.ST_RETIRAR);
-					remove_jugador(client.jugador.getNom());
+					remove_jugador_actiu(client.jugador.getNom());
 					return 2;
 					
 				default:
@@ -249,7 +256,7 @@ public class Joc{
 	}
 	
 	public void donar_cartes_taula() {
-		//Fa un check de quantes cartes hi ha a la taula per a tothom i en funciï¿½ fa una cosa o una altra
+		//Fa un check de quantes cartes hi ha a la taula per a tothom i en funció fa una cosa o una altra
 		if(tauler.cartes_sobre_taula.size() == 0) {
 			for(int i=0 ; i<3 ; i++) {
 				tauler.cartes_sobre_taula.add(baralla.pick_and_remove_Carta());
@@ -260,14 +267,6 @@ public class Joc{
 			tauler.cartes_sobre_taula.add(baralla.pick_and_remove_Carta());
 		}
 	}
-
-	private void print_cartes_taula() {
-		System.out.println("\n----------------------------------");
-		for(int i=0 ; i < tauler.cartes_sobre_taula.size() ; i++ ) {
-			System.out.println("Carta "+(i+1)+" -> "+tauler.cartes_sobre_taula.get(i));
-		}
-		System.out.println("----------------------------------\n");
-	}
 	
 	private void donar_cartes_jugadors() {
 		for(int i=0 ; i < jugadors_actius.size() ; i++ ) {
@@ -275,7 +274,7 @@ public class Joc{
 		}
 	}
 	
-	private void remove_jugador(String nom) {
+	private void remove_jugador_actiu(String nom) {
 		String iter_name;
 		for (int i=0 ; i < jugadors_actius.size() ; i++) {
 			iter_name = jugadors_actius.get(i).jugador.getNom();
@@ -320,29 +319,27 @@ public class Joc{
 			flush_apostes();
 			aposta = false;
 			donar_cartes_taula();
-			print_cartes_taula();
+			tauler.update_aposta_activa(0);
+			view.print_cartes_taula(tauler);
 		}
 		if(check_guanyador) {
 			ArrayList<ClientThread> guanyadors = tauler.guanyador(jugadors_actius , tauler.cartes_sobre_taula);
 			int diners_guanyador = tauler.get_diners_taula()/guanyadors.size();
-			String info_guanyadors = "Guanyadors:\n";
+			String info_guanyadors = "\nGuanyador(s):\n";
 			for(int i=0; i<guanyadors.size(); i++) {
 				guanyadors.get(i).getJugador().rebreDiners(diners_guanyador); //repartir diners
 				info_guanyadors+= "- "+guanyadors.get(i).getJugador().getNom()+"\n";
 			}
 			info_guanyadors+= tauler.rankMa(guanyadors.get(0).getJugador().getMa(), tauler.getCartesTaula()).toString()+"\n";
 			for(int i=0; i<jugadors_inici.size(); i++) {
+				jugadors_actius.get(i).getOutput().writeObject(View.ST_FINALITZACIO);
+				jugadors_actius.get(i).getOutput().flush();
 				jugadors_actius.get(i).getOutput().writeInt(View.INFO_GUANYADORS_INCOMING);
 				jugadors_actius.get(i).getOutput().flush();
 				jugadors_actius.get(i).getOutput().writeObject(info_guanyadors);
 				jugadors_actius.get(i).getOutput().flush();
 			}
-			tauler.update_aposta_activa(0);
 			tauler.reset_diners_taula();
-			
-			
-			
-			
 		}
 	}
 }

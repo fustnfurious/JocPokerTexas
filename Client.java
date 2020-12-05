@@ -1,8 +1,7 @@
-
+package PokerModel;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.*;
 
 public class Client {
@@ -11,15 +10,15 @@ public class Client {
 	protected ObjectInputStream in_client;
 	protected ObjectOutputStream out_client;
 	
-	private boolean exit_player, mala_opcio;
+	private boolean exit_player, mala_opcio, joc_actiu;
 	private int opcio;
 	private Scanner scanner = new Scanner(System.in);
 
-	public Client(String nom, int diners) throws InterruptedException {
+	public Client(String nom, int diners, String adr) throws InterruptedException {
 		jugador_client = new Jugador(nom, diners);
 		this.exit_player = false;
 		try {
-			socket = new Socket("localhost", 8888);
+			socket = new Socket(adr, 8888);
 			in_client = new ObjectInputStream(socket.getInputStream());
 			out_client = new ObjectOutputStream(socket.getOutputStream());
 			
@@ -37,12 +36,15 @@ public class Client {
 			try {
 				String situacio_inicial = (String) in_client.readObject();
 				System.out.println(situacio_inicial);
-				boolean joc_actiu = true;
+				joc_actiu = true;
 				while(joc_actiu) {
 					String situacio_ronda = (String) in_client.readObject();
 					System.out.println(situacio_ronda);
 					Thread.sleep(400);
 					ronda();
+					if(joc_actiu == false) {
+						break;
+					}
 				}
 				
 			} catch (Exception e) {
@@ -143,15 +145,17 @@ public class Client {
 				}
 			}
 			break;
-		case View.INFO_GUANYADORS_INCOMING: 
-			String info = (String) in_client.readObject();
-			System.out.println(info);
-			System.out.println(View.SEG_RONDA);
-			break;
-				
 		case View.SENSE_DINERS:
 			System.out.println(View.ST_SENSE_DINERS);
 			break;
+			
+		case View.INFO_GUANYADORS_INCOMING: 
+			String info = (String) in_client.readObject();
+			System.out.println(info);
+			System.out.println(View.ST_SEG_RONDA);
+			joc_actiu = false;
+			break;
+			
 		
 		}
 		
@@ -161,11 +165,12 @@ public class Client {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Com et dius?");
 		String input = scanner.nextLine();
-		System.out.println("Quants diners vols posar?");
+		System.out.println("Quants diners vols posar?");  
 		int diners_inicials = scanner.nextInt();
 		
+		
 		try {
-			Client client = new Client(input, diners_inicials);
+			Client client = new Client(input, diners_inicials, args[0]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

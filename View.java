@@ -1,3 +1,5 @@
+package PokerModel;
+
 public class View {
 	public static final int PASSAR = 1;
 	public static final int APOSTAR = 2;
@@ -19,10 +21,10 @@ public class View {
 	public static final String ST_AMB_APOSTA = "El teu torn. Selecciona amb el numero.\n(1)Igualar\n(2)Apostar\n(3)Retirarse";
 	public static final String ST_AMB_ALLIN = "El teu torn. Selecciona amb el numero.\n(1)All-in\n(2)Retirar-se";
 	public static final String ST_MALA_APOSTA = "No tens tants diners. Redueix la aposta.";
-	public static final String ST_MALA_OPCIO = "No has triat cap opciÃ³ correcta";
-	public static final String SEG_RONDA = "Passant a la segÃ¼ent ronda...";
+	public static final String ST_MALA_OPCIO = "No has triat cap opció correcta";
 	public static final String ST_SENSE_DINERS = "Ja no pots apostar, es passa el teu torn";
-	
+	public static final String ST_FINALITZACIO = "\nS'ha acabat el joc";
+	public static final String ST_SEG_RONDA = "Passant a la següent ronda...";
 	
 	public View() {
 	}
@@ -51,6 +53,7 @@ public class View {
 		
 		return info;
 	}
+	
 	protected void print_cartes_taula(Taula tauler) {
 		System.out.println("\n----------------------------------");
 		for(int i=0 ; i < tauler.cartes_sobre_taula.size() ; i++ ) {
@@ -58,5 +61,4 @@ public class View {
 		}
 		System.out.println("----------------------------------\n");
 	}
-	
 }

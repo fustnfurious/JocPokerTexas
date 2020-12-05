@@ -1,4 +1,4 @@
-
+package PokerModel;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -6,11 +6,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Servidor {
-	public static final int port = 8888;
-	public static final String s = "localhost";
-	public static ServerSocket ss =  null;
-	public static ObjectOutputStream out;
-	public static ObjectInputStream in;
+	protected static final int port = 8888;
+	protected static final String s = "localhost";
+	protected static ServerSocket ss =  null;
+	protected static ObjectOutputStream out;
+	protected static ObjectInputStream in;
 	
 	
 	public static void main(String[] args) {
@@ -60,14 +60,6 @@ class ClientThread extends Thread {
 		this.s = s;
 	}
 	
-	public Jugador getJugador() {
-		return this.jugador;
-	}
-	
-	public ObjectOutputStream getOutput() {
-		return this.out_server;
-	}
-	
 	@Override
 	public void run() {
 		try {			
@@ -90,5 +82,13 @@ class ClientThread extends Thread {
 			e.printStackTrace();
 		}
 		return opcio;
+	}
+	
+	public Jugador getJugador() {
+		return this.jugador;
+	}
+
+	public ObjectOutputStream getOutput() {
+		return this.out_server;
 	}
 }

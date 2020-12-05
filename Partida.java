@@ -4,12 +4,11 @@ import java.util.*;
 
 public class Partida extends Thread{
 	
-	public ArrayList<ClientThread> jugadors;
+	protected ArrayList<ClientThread> jugadors;
 	private Joc joc_actiu;
 	private boolean nou_primer_torn = true, game_active;	
 	boolean exit_partida = true;
-	int index_torn_absolut;
-	int f = 0;
+	protected int index_torn_absolut;
 	
 	
 	public Partida() {
@@ -42,6 +41,7 @@ public class Partida extends Thread{
 				joc_actiu = new Joc(jugadors);
 				try {
 					joc_actiu.generar_joc(index_torn_absolut);
+					game_active = false;
 					Thread.sleep(15000);
 				} catch (Exception e) {
 					e.printStackTrace();
