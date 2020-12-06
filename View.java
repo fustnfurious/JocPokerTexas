@@ -30,26 +30,34 @@ public class View {
 	}
 	
 	public String printCartes_Jugador(ClientThread client, Taula tauler) {
-		String cartes = "**********************"
+		String cartes = "\n**********************"
+				+"\u001B[32m"
 				+client.jugador.ma
-				+"\n**********************"
-				+"\n-Diners disponibles: "+ client.jugador.getDiners()
+				+"\u001B[0m"
 				+"\n**********************";
 		return cartes;
 	}
 	
 	public String printInfo_Jugador(ClientThread p1, Taula tauler) {
 		String info = "***********************"
+				+"\u001B[32m"
 				+p1.jugador.ma
+				+"\u001B[0m"
 				+"\n------------------------"
 				+"\nTAULA";
-		for(int i=0 ; i < tauler.cartes_sobre_taula.size() ; i++) {
+		for(int i=0 ; i < tauler.cartes_sobre_taula.size(); i++) {
 			info = info + "\nCarta: "+tauler.cartes_sobre_taula.get(i);
 		}
-		info = info + "\n------------------------"
+		info = info + "\n------------------------";
+		if(p1.jugador.getDiners()==0) {
+			info+="\u001B[31m"
 				+"\n-Diners disponibles: "+ p1.jugador.getDiners()
-				+"\n-Diners apostats: "+ p1.jugador.getDinersApostats()
-				+"\n-Aposta activa: "+ tauler.get_aposta_activa()
+				+"\u001B[0m";
+		} else {
+			info+="\n-Diners disponibles: "+ p1.jugador.getDiners();
+		}
+			info+="\n-Diners apostats: "+ p1.jugador.getDinersApostats()
+				+"\n-Ultima aposta: "+ tauler.get_aposta_activa()
 				+"\n-Diners sobre la taula: "+tauler.get_diners_taula()
 				+"\n***********************\n";
 		

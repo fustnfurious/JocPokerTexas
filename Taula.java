@@ -88,7 +88,15 @@ public class Taula {
 			break;
 			default: ran="Carta Alta";
 			}
-			return "\nRanking -> " + ran + "  Carta Alta: " + this.numCartaAlta + "\n";
+			String num;
+			switch(this.numCartaAlta) {
+			case 14: num = "As";
+			case 13: num = "K";
+			case 12: num = "Q";
+			case 11: num = "J";
+			default: num = ""+this.numCartaAlta;
+			}
+			return "\nRanking -> " + ran + "  Carta Alta: " + num + "\n";
 		}
 	}
 	

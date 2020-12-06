@@ -201,9 +201,6 @@ public class Client {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			client.socket.close()
-			client.in_client.close()
-			client.out_client.close()
 			scanner.close();
 		}
 
