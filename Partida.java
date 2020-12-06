@@ -59,7 +59,7 @@ public class Partida extends Thread{
 					
 				}
 			}
-			if(jugadors.size() >= 2 & game_active == false) {
+			if(jugadors.size() >= 2 && game_active == false) {
 				game_active = true;
 				index_torn_absolut = canviar_primer_torn();
 				joc_actiu = new Joc(jugadors);
@@ -83,7 +83,15 @@ public class Partida extends Thread{
 			} else {
 				System.out.println("esperant jugadors...");
 				try {
-					Thread.sleep(15000);
+					for(int i=14; i>0; i--) {
+						int xifres = (i/10<1)?1:2;
+						System.out.print(i);
+						if(xifres==1) {
+							System.out.print(" ");
+						}
+						System.out.print("\u001B["+2+"D");
+						Thread.sleep(1000);
+					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
