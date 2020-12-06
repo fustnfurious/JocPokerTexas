@@ -19,9 +19,7 @@ public class Baralla {
 	}
 	
 	public Carta pick_and_remove_Carta() {
-//		System.out.println(cartes.size());
 		int index_num = randomGenerator.nextInt(cartes.size());
-//		System.out.println(index_num);
 		return cartes.remove(index_num);
 	}
 }
