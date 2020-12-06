@@ -1,3 +1,5 @@
+
+
 import java.io.IOException;
 import java.util.*;
 
@@ -226,6 +228,7 @@ public class Joc{
 						i -= 1;
 					}
 				} catch (IOException e) {
+					e.printStackTrace();
 					jugadors_actius.get(index_torn_actiu_real).s.close();
 					jugadors_inici.remove(index_torn_actiu_real);
 					jugadors_actius.remove(index_torn_actiu_real);
@@ -314,7 +317,7 @@ public class Joc{
 			}while(!nou_torn);
 			if(check_lastone()) {
 				check_guanyador = false;
-				if(jugadors_actius.size() == 0) {
+				if(jugadors_actius.size() == 1) {
 					jugadors_actius.get(0).jugador.rebreDiners(tauler.get_diners_taula());
 					break;
 				}

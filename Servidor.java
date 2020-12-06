@@ -1,4 +1,5 @@
 
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -58,6 +59,7 @@ class ClientThread extends Thread {
 	Socket s;
 	ObjectInputStream in_server;
 	ObjectOutputStream out_server;
+	protected boolean run;
 	
 	public ClientThread(Socket s) {
 		this.s = s;
@@ -71,7 +73,9 @@ class ClientThread extends Thread {
 
 			out_server.writeObject(new String("espera a que comenci el joc.."));
 			
-			while(true) {}
+			while(run) {
+				
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

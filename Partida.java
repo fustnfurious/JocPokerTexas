@@ -1,3 +1,4 @@
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.SocketException;
@@ -44,10 +45,18 @@ public class Partida extends Thread{
 						jugadors.get(i).in_server.close();
 						jugadors.get(i).out_server.close();
 						jugadors.get(i).s.close();
+						jugadors.get(i).run = false;
 						jugadors.remove(i);
+						
+						
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+				}
+				if(jugadors.get(i).s.isClosed()) {
+					jugadors.get(i).run = false;
+					jugadors.remove(i);
+					
 				}
 			}
 			if(jugadors.size() >= 2 & game_active == false) {
@@ -63,6 +72,7 @@ public class Partida extends Thread{
 					for(int i=0 ; i<jugadors.size() ; i++) {
 						if(jugadors.get(i).s.isClosed()) {
 							jugadors.remove(i);
+							jugadors.get(i).run = false;
 							game_active =   false;
 						}
 					}
