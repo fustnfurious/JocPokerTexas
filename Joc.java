@@ -1,3 +1,4 @@
+package PokerModel;
 
 import java.io.IOException;
 import java.util.*;
@@ -20,7 +21,7 @@ public class Joc{
 	}
 	
 	
-	public int torn_actiu(ClientThread client) throws Exception {
+	public int torn_actiu(ClientThread client) throws Exception{
 		int output = -1;
 		client.out_server.writeObject(view.printInfo_Jugador(client, tauler));
 		client.out_server.flush();
@@ -43,7 +44,7 @@ public class Joc{
 					System.out.println(View.ST_PASSAR);
 					break;
 					
-				case 2:  ///FALTA TRACTAR L'EXEMPCIO DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
+				case 2: 
 					boolean apostat_correctament = false;
 					while(apostat_correctament == false) {
 						output = client.getData();
@@ -137,7 +138,7 @@ public class Joc{
 					
 					break;
 					
-				case 2:  ///FALTA TRACTAR L'EXEMPCIO DE UNA LECTURA DE TEXT EN COMPTES DE NUMERO
+				case 2:  
 					output = 0;
 					boolean apostat_correctament = false;
 					while(apostat_correctament == false) {
@@ -218,12 +219,18 @@ public class Joc{
 			for(int i=index_torn_actiu ; i < index_torn_actiu + jugadors_actius.size() ; i++) {
 				int index_torn_actiu_real = i%jugadors_actius.size();
 				int moviment;
-				moviment = torn_actiu(jugadors_actius.get(index_torn_actiu_real));
-				if(moviment == 1) {
-					index_torn_relatiu = index_torn_actiu_real;
-					return false;
-				}else if(moviment == 2){
-					i -= 1;
+				try {
+					moviment = torn_actiu(jugadors_actius.get(index_torn_actiu_real));
+					if(moviment == 1) {
+						index_torn_relatiu = index_torn_actiu_real;
+						return false;
+					}else if(moviment == 2){
+						i -= 1;
+					}
+				} catch (IOException e) {
+					jugadors_actius.get(index_torn_actiu_real).s.close();
+					jugadors_inici.remove(index_torn_actiu_real);
+					jugadors_actius.remove(index_torn_actiu_real);
 				}
 			}
 		}else if(aposta == true){
@@ -284,6 +291,8 @@ public class Joc{
 			}
 		}
 	}
+	
+	
 	
 	public void generar_joc(int index_torn_absolut) throws Exception {
 		boolean nou_torn, check_guanyador = true, aposta = false;

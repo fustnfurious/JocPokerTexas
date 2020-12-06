@@ -1,4 +1,7 @@
-
+package PokerModel;
+import java.io.EOFException;
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.*;
 
 
@@ -35,6 +38,19 @@ public class Partida extends Thread{
 	
 	public void run() {
 		while(exit_partida) {
+			for(int i=0 ; i<jugadors.size() ; i++) {
+				boolean al_carrer = jugadors.get(i).comprovar_si_them_de_xutar();
+				if(al_carrer == true) {
+					try {
+						jugadors.get(i).in_server.close();
+						jugadors.get(i).out_server.close();
+						jugadors.get(i).s.close();
+						jugadors.remove(i);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 			if(jugadors.size() >= 2 & game_active == false) {
 				game_active = true;
 				index_torn_absolut = canviar_primer_torn();
@@ -43,6 +59,14 @@ public class Partida extends Thread{
 					joc_actiu.generar_joc(index_torn_absolut);
 					game_active = false;
 					Thread.sleep(15000);
+				} catch (SocketException | EOFException e) {
+					System.out.println("ha marxat un jugador");
+					for(int i=0 ; i<jugadors.size() ; i++) {
+						if(jugadors.get(i).s.isClosed()) {
+							jugadors.remove(i);
+							game_active =   false;
+						}
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -50,7 +74,7 @@ public class Partida extends Thread{
 			} else {
 				System.out.println("esperant jugadors...");
 				try {
-					Thread.sleep(30000);
+					Thread.sleep(15000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
