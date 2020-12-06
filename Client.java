@@ -72,11 +72,15 @@ public class Client {
 						break;
 					}
 				}
-				
 			} catch (Exception e) {
-				e.printStackTrace();
+				try {
+					socket.close();
+					System.out.println("s'ha tancat la connexio.");
+					return;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
-			
 		}
 	}
 	
