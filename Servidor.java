@@ -81,8 +81,12 @@ class ClientThread extends Thread {
 		int opcio = -2;
 		try {
 			opcio = in_server.readInt();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			try {
+				s.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		return opcio;
 	}
@@ -93,5 +97,13 @@ class ClientThread extends Thread {
 
 	public ObjectOutputStream getOutput() {
 		return this.out_server;
+	}
+	
+	public boolean comprovar_si_them_de_xutar() {
+		if(this.jugador.diners == 0) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 }
