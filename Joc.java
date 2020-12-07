@@ -296,7 +296,7 @@ public class Joc{
 	
 	
 	public void generar_joc(int index_torn_absolut) throws Exception {
-		boolean nou_torn, check_guanyador = true, aposta = false;
+		boolean nou_torn, check_guanyador = true, aposta = false, ultim = false;
 		
 		donar_cartes_jugadors();
 		
@@ -307,6 +307,14 @@ public class Joc{
 		}
 		
 		for(int j=0; j<4 ; j++) {
+			if(ultim == true) {
+				jugadors_actius.get(0).out_server.writeObject(new String("decision final"));
+				jugadors_actius.get(0).out_server.flush();
+				Thread.sleep(1000);
+				jugadors_actius.get(0).out_server.writeInt(View.ULTIM);
+				jugadors_actius.get(0).out_server.flush();
+				break;
+			}
 			do {
 				if(aposta == false) {
 					nou_torn = sequencia_torns(index_torn_absolut, aposta);
@@ -319,10 +327,11 @@ public class Joc{
 				check_guanyador = false;
 				if(jugadors_actius.size() == 1) {
 					jugadors_actius.get(0).jugador.rebreDiners(tauler.get_diners_taula());
-					break;
+					ultim = true;
 				}
 				
 			}
+			
 			if(j==3) {
 				check_guanyador = true;
 			}

@@ -8,7 +8,7 @@ import java.util.*;
 public class Partida extends Thread{
 	
 	protected ArrayList<ClientThread> jugadors;
-	private Joc joc_actiu;
+//	private Joc joc_actiu;
 	private boolean nou_primer_torn = true, game_active;	
 	boolean exit_partida = true;
 	protected int index_torn_absolut;
@@ -47,6 +47,7 @@ public class Partida extends Thread{
 						jugadors.get(i).s.close();
 						jugadors.get(i).run = false;
 						jugadors.remove(i);
+						i = i%jugadors.size();
 						
 						
 					} catch (IOException e) {
@@ -62,7 +63,7 @@ public class Partida extends Thread{
 			if(jugadors.size() >= 2 && game_active == false) {
 				game_active = true;
 				index_torn_absolut = canviar_primer_torn();
-				joc_actiu = new Joc(jugadors);
+				Joc joc_actiu = new Joc(jugadors);
 				try {
 					joc_actiu.generar_joc(index_torn_absolut);
 					game_active = false;
@@ -83,7 +84,7 @@ public class Partida extends Thread{
 			} else {
 				System.out.println("esperant jugadors...");
 				try {
-					for(int i=14; i>0; i--) {
+					/*for(int i=14; i>0; i--) {
 						int xifres = (i/10<1)?1:2;
 						System.out.print(i);
 						if(xifres==1) {
@@ -91,7 +92,8 @@ public class Partida extends Thread{
 						}
 						System.out.print("\u001B["+2+"D");
 						Thread.sleep(1000);
-					}
+					}*/
+					Thread.sleep(20000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

@@ -17,6 +17,7 @@ public class Client {
 	public static final int BONA_APOSTA = 9;
 	public static final int SENSE_DINERS = 10;
 	public static final int INFO_GUANYADORS_INCOMING = 11;
+	public static final int ULTIM = 12;
 	
 	public static final String ST_PASSAR = "Passant torn..."; 
 	public static final String ST_APOSTAR = "Quant vols apostar?";
@@ -30,6 +31,7 @@ public class Client {
 	public static final String ST_SENSE_DINERS = "Ja no pots apostar, es passa el teu torn";
 	public static final String ST_FINALITZACIO = "\nS'ha acabat el joc";
 	public static final String ST_SEG_RONDA = "Passant a la seguent ronda...";
+	public static final String ST_ULTIM = "Has guanyat, nomes quedaves tu";
 	
 	protected Socket socket;
 	protected ObjectInputStream in_client;
@@ -98,10 +100,10 @@ public class Client {
 				out_client.flush();
 				mala_opcio = false;
 				switch(opcio) {
-				case 1:
+				case PASSAR:
 					System.out.println(ST_PASSAR);
 					break;
-				case 2:
+				case APOSTAR:
 					do {
 						System.out.println(ST_APOSTAR);
 						opcio = scanner.nextInt();
@@ -111,8 +113,9 @@ public class Client {
 					}while(in_client.readInt() == MALA_APOSTA);
 						
 					break;
-				case 3:
+				case RETIRAR:
 					System.out.println(ST_RETIRAR);
+					joc_actiu = false;
 					break;
 					
 				default:
@@ -146,6 +149,7 @@ public class Client {
 					break;
 				case 3:
 					System.out.println(ST_RETIRAR);
+					joc_actiu = false;
 					break;
 					
 				default:
@@ -168,6 +172,7 @@ public class Client {
 					break;
 				case 2:
 					System.out.println(ST_RETIRAR);
+					joc_actiu = false;
 					break;
 				default:
 					System.out.println(ST_MALA_OPCIO);
@@ -183,6 +188,11 @@ public class Client {
 			String info = (String) in_client.readObject();
 			System.out.println(info);
 			System.out.println(ST_SEG_RONDA);
+			joc_actiu = false;
+			break;
+			
+		case ULTIM:
+			System.out.println(ST_ULTIM);
 			joc_actiu = false;
 			break;
 			

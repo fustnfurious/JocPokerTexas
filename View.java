@@ -12,6 +12,7 @@ public class View {
 	public static final int BONA_APOSTA = 9;
 	public static final int SENSE_DINERS = 10;
 	public static final int INFO_GUANYADORS_INCOMING = 11;
+	public static final int ULTIM = 12;
 	
 	public static final String ST_PASSAR = "Passant torn..."; 
 	public static final String ST_APOSTAR = "Quant vols apostar?";

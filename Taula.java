@@ -91,9 +91,13 @@ public class Taula {
 			String num;
 			switch(this.numCartaAlta) {
 			case 14: num = "As";
+			break;
 			case 13: num = "K";
+			break;
 			case 12: num = "Q";
+			break;
 			case 11: num = "J";
+			break;
 			default: num = ""+this.numCartaAlta;
 			}
 			return "\nRanking -> " + ran + "  Carta Alta: " + num + "\n";
