@@ -84,7 +84,7 @@ public class Partida extends Thread{
 			} else {
 				System.out.println("esperant jugadors...");
 				try {
-					/*for(int i=14; i>0; i--) {
+					for(int i=14; i>0; i--) {
 						int xifres = (i/10<1)?1:2;
 						System.out.print(i);
 						if(xifres==1) {
@@ -92,8 +92,7 @@ public class Partida extends Thread{
 						}
 						System.out.print("\u001B["+2+"D");
 						Thread.sleep(1000);
-					}*/
-					Thread.sleep(20000);
+					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
