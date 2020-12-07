@@ -8,7 +8,6 @@ public class Jugador implements Serializable{
 	protected int diners_apostats_enjoc;
 	protected boolean primerTorn;
 	protected String nom;
-	protected boolean is_playing;
 
 	public Jugador(String nom) {
 		this.nom = nom;
@@ -43,9 +42,7 @@ public class Jugador implements Serializable{
 		return this.diners;
 	}
 	
-	public void fold() {
-		this.is_playing = false;
-	}
+	
 
 	public int getDiners() {
 		return this.diners;

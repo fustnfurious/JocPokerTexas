@@ -64,6 +64,7 @@ public class Partida extends Thread{
 				game_active = true;
 				index_torn_absolut = canviar_primer_torn();
 				Joc joc_actiu = new Joc(jugadors);
+				System.out.println("Iniciant partida...");
 				try {
 					joc_actiu.generar_joc(index_torn_absolut);
 					game_active = false;
